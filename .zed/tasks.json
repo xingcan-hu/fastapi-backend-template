@@ -1,0 +1,41 @@
+[
+  {
+    "label": "uv sync",
+    "command": "uv",
+    "args": ["sync"],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "FastAPI dev server",
+    "command": "uv",
+    "args": [
+      "run",
+      "uvicorn",
+      "app.main:app",
+      "--reload",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "8000"
+    ],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "Ruff check",
+    "command": "uv",
+    "args": ["run", "ruff", "check", "."],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "Ruff format check",
+    "command": "uv",
+    "args": ["run", "ruff", "format", "--check", "."],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  },
+  {
+    "label": "Pytest",
+    "command": "uv",
+    "args": ["run", "pytest"],
+    "cwd": "$ZED_WORKTREE_ROOT"
+  }
+]

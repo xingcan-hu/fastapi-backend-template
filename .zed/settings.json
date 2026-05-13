@@ -1,0 +1,34 @@
+{
+  "terminal": {
+    "detect_venv": {
+      "on": {
+        "directories": [".venv"],
+        "activate_script": "default"
+      }
+    }
+  },
+  "languages": {
+    "Python": {
+      "code_actions_on_format": {
+        "source.organizeImports.ruff": true
+      },
+      "formatter": {
+        "language_server": {
+          "name": "ruff"
+        }
+      },
+      "format_on_save": "on"
+    }
+  },
+  "lsp": {
+    "basedpyright": {
+      "binary": {
+        "path": ".venv/bin/basedpyright-langserver",
+        "arguments": ["--stdio"]
+      }
+    }
+  },
+  "auto_install_extensions": {
+    "basedpyright": true
+  }
+}
