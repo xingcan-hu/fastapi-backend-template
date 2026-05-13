@@ -1,0 +1,26 @@
+[
+  {
+    "label": "FastAPI: Backend Template",
+    "adapter": "Debugpy",
+    "request": "launch",
+    "cwd": "$ZED_WORKTREE_ROOT",
+    "python": ["$ZED_WORKTREE_ROOT/.venv/bin/python"],
+    "module": "uvicorn",
+    "args": [
+      "app.main:app",
+      "--reload",
+      "--host",
+      "127.0.0.1",
+      "--port",
+      "8000"
+    ],
+    "env": {
+      "MYSQL_HOST": "127.0.0.1",
+      "MYSQL_PORT": "3306",
+      "MYSQL_USER": "root",
+      "MYSQL_PASSWORD": "",
+      "MYSQL_DATABASE": "fastapi_backend_template"
+    },
+    "justMyCode": true
+  }
+]

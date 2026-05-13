@@ -1,0 +1,17 @@
+.DS_Store
+.env
+.git
+.pytest_cache
+.ruff_cache
+.uv-cache
+.venv
+.vscode
+.zed
+.github
+__pycache__
+*.py[cod]
+.agents
+README.md
+AGENTS.md
+environment.yml
+tests

@@ -1,0 +1,4 @@
+interface:
+  display_name: "FastAPI Backend Template"
+  short_description: "Project rules for a reusable FastAPI backend template"
+  default_prompt: "Use $fastapi-backend-template when modifying this FastAPI backend template project."
