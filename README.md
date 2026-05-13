@@ -2,7 +2,7 @@
 
 Reusable FastAPI backend template with MySQL persistence.
 
-Project conventions:
+What this template provides:
 
 - Python 3.12
 - FastAPI
@@ -12,10 +12,35 @@ Project conventions:
 - Dockerfile for the API service only
 - Ruff for linting, import sorting, and formatting
 - REST-style resource API design for business endpoints
+- A small demo user resource showing the route/schema/model/repository pattern
+
+What this template intentionally leaves to the consuming project:
+
+- Authentication, authorization, tenancy, and user-session policy
+- Domain-specific business resources beyond the demo user example
+- MySQL provisioning, backups, and infrastructure orchestration
+- Background workers, queues, schedulers, and cache services
+- Automatic `.env` loading in application code
+
+## Use This Template
+
+When starting a new service from this template:
+
+1. Rename project metadata in `pyproject.toml`, `README.md`, Docker image tags,
+   and environment defaults such as `APP_NAME` and `MYSQL_DATABASE`.
+2. Copy `.env.example` to `.env`, provision an external MySQL database, and
+   export the environment variables before running local commands.
+3. Run `uv sync`, then apply existing migrations with
+   `uv run alembic upgrade head`.
+4. Keep the demo user resource only as long as it is useful. When replacing it,
+   remove the route, schema, model, repository, migration, router registration,
+   and demo tests together.
+5. Run `./scripts/check.sh` before handing the service to another developer or
+   opening a pull request.
 
 ## Setup
 
-Install uv if needed:
+Install uv if needed. On macOS with Homebrew:
 
 ```bash
 brew install uv
@@ -83,6 +108,7 @@ uv run uvicorn app.main:app --reload
 Open:
 
 - `http://127.0.0.1:8000/`
+- `http://127.0.0.1:8000/demo/users?email=ada@example.com`
 - `http://127.0.0.1:8000/docs`
 - `http://127.0.0.1:8000/redoc`
 - `http://127.0.0.1:8000/openapi.json`
@@ -99,8 +125,10 @@ environment variables as the API and writes migration scripts to
 `migrations/versions/`. Import new model modules from `app/models/__init__.py`
 so Alembic autogenerate can see their metadata.
 
-The template starts without business tables. Add your first model and then
-generate the first migration for that project-specific schema.
+The template includes a small `demo_user` table and `/demo/users` read endpoint
+as a working example of the model, migration, repository, schema, and route
+layout. Replace or remove the demo resource when starting a project-specific
+domain.
 
 Create a migration after changing models:
 
@@ -138,10 +166,10 @@ Settings validation rejects `DEBUG=true` or `DOCS_ENABLED=true` when
 
 ## Adding Business Resources
 
-The default app exposes only system and health endpoints. Add project-specific
-resources by creating a route module in `app/api/routes/`, schemas in
-`app/schemas/`, models in `app/models/`, repositories in `app/repositories/`,
-and business logic in `app/services/`.
+The default app exposes system, health, and demo user endpoints. Add
+project-specific resources by creating a route module in `app/api/routes/`,
+schemas in `app/schemas/`, models in `app/models/`, repositories in
+`app/repositories/`, and business logic in `app/services/`.
 
 Use `get_db_session` for read-only database work. Use `get_db_transaction` for
 write endpoints so successful requests commit and exceptions roll back through a
@@ -185,7 +213,7 @@ app/
   db/
     session.py            SQLAlchemy async engine and session infrastructure
   models/                 SQLAlchemy database model definitions
-  repositories/           Future data access layer
+  repositories/           Data access layer
   schemas/                Pydantic request/response schemas and API envelopes
   services/               Business logic and dependency health checks
 tests/                    Pytest smoke and behavior tests
@@ -301,6 +329,18 @@ docker image rm fastapi-backend-template
 
 ## Lint And Format
 
+Run the local CI-style check script:
+
+```bash
+./scripts/check.sh
+```
+
+To include a Docker image build in the local check:
+
+```bash
+CHECK_DOCKER_BUILD=1 ./scripts/check.sh
+```
+
 Check lint:
 
 ```bash
@@ -332,8 +372,22 @@ uv run ruff format .
 uv run ruff check . --fix
 ```
 
-GitHub Actions CI runs linting, formatting checks, type checking, tests, and a
-Docker image build for pull requests and pushes to `main`.
+The local check script is the source of truth for linting, formatting checks,
+type checking, the import smoke test, and tests. The optional GitHub Actions
+workflow calls the same script, so these checks can run locally or in any CI
+system.
+
+## Template Maintenance
+
+Keep template-facing files synchronized when changing setup or conventions:
+
+- `README.md` explains how humans adopt and run the template.
+- `AGENTS.md` explains how coding agents should work in this repository.
+- `.agents/skills/fastapi-backend-template/SKILL.md` captures Codex-specific
+  project guidance.
+- `.env.example`, `app/core/config.py`, Docker examples, and tests should list
+  the same runtime settings.
+- `scripts/check.sh` should remain the local equivalent of the default CI job.
 
 ## Agent Guidance
 

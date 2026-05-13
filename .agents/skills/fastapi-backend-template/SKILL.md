@@ -17,6 +17,7 @@ Follow this repository's local backend conventions when changing code, dependenc
 - Use MySQL as an external service.
 - Use Ruff for linting, import sorting, and formatting.
 - Use Dockerfile only for the API service.
+- Keep `app.main:app` as the stable ASGI entrypoint.
 
 ## Hard Constraints
 
@@ -36,7 +37,9 @@ uv sync
 uv run uvicorn app.main:app --reload
 uv run ruff check .
 uv run ruff format --check .
+uv run basedpyright
 uv run pytest
+./scripts/check.sh
 docker build -t fastapi-backend-template .
 docker run --rm -p 8000:8000 -e MYSQL_HOST=host.docker.internal fastapi-backend-template
 ```
@@ -51,9 +54,20 @@ uv run python -c "from app.main import app; print(app.title)"
 
 - Prefer small, focused changes that match the current project structure.
 - Keep README, AGENTS.md, dependency files, Dockerfile, and lint configuration consistent.
+- Keep `.env.example`, `app/core/config.py`, Docker examples, and tests aligned when runtime settings change.
+- Keep `scripts/check.sh` and `.github/workflows/ci.yml` aligned when local or CI checks change.
+- Keep this skill aligned with `AGENTS.md` when project conventions or agent workflows change.
 - Use environment variables for MySQL configuration.
 - Treat MySQL as an externally managed dependency in local and Docker workflows.
 - Avoid unrelated refactors while working on project setup or documentation.
+
+## Template Review Checklist
+
+- A new project can rename package metadata, Docker image tags, `APP_NAME`, and `MYSQL_DATABASE` without hunting through hidden assumptions.
+- The demo user resource remains a clear example or is removed coherently from route, schema, model, repository, migration, router registration, and tests.
+- `README.md` explains human setup and handoff steps.
+- `AGENTS.md` stays as a concise repository map for agents: commands, entrypoints, source-of-truth files, and change landmarks.
+- The local check script is the default quality gate and CI calls it rather than duplicating command lists.
 
 ## API Rules
 
